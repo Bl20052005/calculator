@@ -1,10 +1,11 @@
 import './App.css';
 
 function App() {
-  var value1;
-  var value2;
-  var operator;
+  var value1 = "";
+  var value2 = "";
+  var operator = "";
   var state = -1; //0 is value1, 1 is operator, 2 is value2
+  var displayCalculation;
   const handleClick = (e) =>{
     let value = e.target.value;
     switch(value) {
@@ -37,7 +38,16 @@ function App() {
         value2 = "";
         operator = "";
         break;
+      case "dot":
+        handleDot(value);
+        break;
+      case "+/-":
+        handleNegative(value);
+        break;
     }
+    let element = document.getElementById("smallerDisplay");
+    displayCalculation = value1 + operator + value2;
+    element.value = displayCalculation;
   }
   const handleNumbers = (value) =>{
     let element = document.getElementById("display");
@@ -59,32 +69,97 @@ function App() {
       operator = value;
       state = 1;
     }
+    else if(state === 1){
+      value1 = handleEquals(value);
+      value2 = "";
+      operator = value;
+      state = 1;
+      let element = document.getElementById("display");
+      element.value = "";
+    }
   }
   const handleEquals = (value) =>{
     let result;
     if(operator === "+"){
-      result = parseInt(value1) + parseInt(value2);
+      result = parseFloat(value1) + parseFloat(value2);
+      result = result.toFixed(6);
       let element = document.getElementById("display");
       element.value = result;
-      return;
+      return result;
     }
     if(operator === "-"){
-      result = parseInt(value1) - parseInt(value2);
+      result = parseFloat(value1) - parseFloat(value2);
+      result = result.toFixed(6);
       let element = document.getElementById("display");
       element.value = result;
-      return;
+      return result;
     }
     if(operator === "*"){
-      result = parseInt(value1) * parseInt(value2);
+      result = parseFloat(value1) * parseFloat(value2);
+      result = result.toFixed(6);
       let element = document.getElementById("display");
       element.value = result;
-      return;
+      return result;
     }
     if(operator === "/"){
-      result = parseInt(value1) / parseInt(value2);
+      result = parseFloat(value1) / parseFloat(value2);
+      result = result.toFixed(6);
       let element = document.getElementById("display");
       element.value = result;
-      return;
+      return result;
+    }
+  }
+  const handleDot = (value) =>{
+    let element = document.getElementById("display");
+    if(state === -1){
+      if(value1 === ""){
+        value1 = "0.";
+        element.value = "0.";
+      }
+      else{
+        let index = value1.indexOf(".");
+        if(index != -1)
+          return;
+        element.value += ".";
+        value1 += ".";
+      }
+    }
+    if(state === 1){
+      if(value2 === ""){
+        value2 = "0.";
+        element.value = "0.";
+      }
+      else{
+        let index = value2.indexOf(".");
+        if(index != -1)
+          return;
+        element.value += ".";
+        value2 += ".";
+      }
+    }
+  }
+  const handleNegative = (value) =>{
+    let element = document.getElementById("display");
+    console.log(value);
+    if(state === -1){
+      let index = value1.indexOf("-");
+      if(index !== -1){
+        value1 = value1.slice(1);
+      }
+      else{
+        value1 = "-" + value1;
+      }
+      element.value = value1;
+    }
+    else if(state == 1){
+      let index = value2.indexOf("-");
+      if(index !== -1){
+        value2 = value2.slice(1);
+      }
+      else{
+        value2 = "-" + value2;
+      }
+      element.value = value2;
     }
   }
   return (
@@ -95,6 +170,7 @@ function App() {
       </head>
       <body>
         <input type="text" value="" id = "display" disabled="disabled"/>
+        <input type="text" value="" id = "smallerDisplay" disabled="disabled"/>
         <div id = "buttonPannel">
           <button className="regularButton" id="b0" value="0" onClick={handleClick}>0</button>
           <button className="regularButton" id="b1" value="1" onClick={handleClick}>1</button>
@@ -109,9 +185,11 @@ function App() {
           <button className="regularButton" id="b8" value="8" onClick={handleClick}>8</button>
           <button className="regularButton" id="times" value="*" onClick={handleClick}>*</button>
           <button className="regularButton" id="b9" value="9" onClick={handleClick}>9</button>
+          <button className="regularButton" id="dot" value="dot" onClick={handleClick}>.</button>
           <button className="regularButton" id="clear" value="clr" onClick={handleClick}>clr</button>
-          <button className="regularButton" id="equals" value="=" onClick={handleClick}>=</button>
           <button className="regularButton" id="divide" value="/" onClick={handleClick}>/</button>
+          <button className="bigButton" id="equals" value="=" onClick={handleClick}>=</button>
+          <button className="regularButton" id="negative" value="+/-" onClick={handleClick}>+/-</button>
         </div>
       </body>
     </div>
