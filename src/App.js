@@ -83,6 +83,7 @@ function App() {
     if(operator === "+"){
       result = parseFloat(value1) + parseFloat(value2);
       result = result.toFixed(6);
+      result = removeZeros(result);
       let element = document.getElementById("display");
       element.value = result;
       return result;
@@ -90,6 +91,7 @@ function App() {
     if(operator === "-"){
       result = parseFloat(value1) - parseFloat(value2);
       result = result.toFixed(6);
+      result = removeZeros(result);
       let element = document.getElementById("display");
       element.value = result;
       return result;
@@ -97,6 +99,7 @@ function App() {
     if(operator === "*"){
       result = parseFloat(value1) * parseFloat(value2);
       result = result.toFixed(6);
+      result = removeZeros(result);
       let element = document.getElementById("display");
       element.value = result;
       return result;
@@ -104,6 +107,7 @@ function App() {
     if(operator === "/"){
       result = parseFloat(value1) / parseFloat(value2);
       result = result.toFixed(6);
+      result = removeZeros(result);
       let element = document.getElementById("display");
       element.value = result;
       return result;
@@ -162,6 +166,21 @@ function App() {
       element.value = value2;
     }
   }
+  const removeZeros = (value) =>{
+    let resultString = value + "";
+    let index = resultString.indexOf(".");
+    let last = resultString.length-1;
+    if(index === -1)
+      return value;
+    while(resultString[last] === "0"){
+      resultString = resultString.substring(0,last);
+      last--;
+    }
+    if(resultString[last] === "."){
+      resultString = resultString.substring(0,last);
+    }
+    return parseFloat(resultString);
+  }
   return (
     <div className="App">
       <head>
@@ -186,10 +205,10 @@ function App() {
           <button className="regularButton" id="times" value="*" onClick={handleClick}>*</button>
           <button className="regularButton" id="b9" value="9" onClick={handleClick}>9</button>
           <button className="regularButton" id="dot" value="dot" onClick={handleClick}>.</button>
-          <button className="regularButton" id="clear" value="clr" onClick={handleClick}>clr</button>
+          <button className="regularButton" id="negative" value="+/-" onClick={handleClick}>+/-</button>
           <button className="regularButton" id="divide" value="/" onClick={handleClick}>/</button>
           <button className="bigButton" id="equals" value="=" onClick={handleClick}>=</button>
-          <button className="regularButton" id="negative" value="+/-" onClick={handleClick}>+/-</button>
+          <button className="regularButton" id="clear" value="clr" onClick={handleClick}>clr</button>
         </div>
       </body>
     </div>
